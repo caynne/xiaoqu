@@ -65,7 +65,7 @@ DOWNLOAD_DELAY = 3
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'xiaoqu.pipelines.XiaoquPipeline': 300,
+   'xiaoqu.pipelines.XiaoQuWriteToCsv': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

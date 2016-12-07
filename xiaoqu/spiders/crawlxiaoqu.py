@@ -8,7 +8,7 @@ class crawlxiaoqu(scrapy.Spider):
 
     name = 'xiaoqu'
     start_urls = ['http://gz.lianjia.com/xiaoqu/pg%d' % d for d in range(1,100,1)]
-    #start_urls = ['http://gz.lianjia.com/xiaoqu']
+    #start_urls = ['http://gz.lianjia.com/xiaoqu/pg1']
 
     def parse(self, response):
         sel = Selector(response)
