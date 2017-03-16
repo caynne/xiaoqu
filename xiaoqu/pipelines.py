@@ -9,6 +9,7 @@ import json
 import codecs
 import csv
 import sys
+import time
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -22,7 +23,8 @@ sys.setdefaultencoding('utf-8')
 #         self.file.write(line)
 #         return item
 
-filename = os.path.abspath(os.curdir)+'/sechandhouse.csv'
+filename = os.path.join('/Users/zidongceshi/code/xiaoqu/xiaoqu/analysis',time.strftime('%Y%m%d',time.localtime(time.time())))
+filename = filename + '.csv'
 class XiaoQuWriteToCsv(object):
     def write_to_csv(self,item):
         csvwriter = csv.writer(codecs.open(filename,'a',encoding='utf-8'))
