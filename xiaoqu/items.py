@@ -23,4 +23,18 @@ class XiaoquItem(scrapy.Item):
     onSellCount = scrapy.Field()
     #90天内成交额
     sellOut = scrapy.Field()
-    pass
+
+class BargainItem(scrapy.Item):
+    houseName = scrapy.Field()
+    houseType = scrapy.Field()
+    dealPrice = scrapy.Field()
+    houseSize = scrapy.Field()
+    dealDate = scrapy.Field()
+    unitPrice = scrapy.Field()
+    direction = scrapy.Field()
+    elevator = scrapy.Field()
+    buildDate = scrapy.Field()
+    dealCycle = scrapy.Field()
+    originalPrice = scrapy.Field()
+    decoration = scrapy.Field()
+    floor = scrapy.Field()

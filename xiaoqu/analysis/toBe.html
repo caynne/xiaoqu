@@ -8,7 +8,7 @@
 
 </head>
 <body>
-    <div id = 'main' style="width: 600px;height: 400px;"></div>
+    <div id = 'main' style="width: 800px;height: 600px;"></div>
 </body>
 </html>
 
@@ -17,12 +17,42 @@
 
 
     $.get(mapPath,function(geoJson){
-        echarts.registerMap('gz',geoJson)
+        echarts.registerMap('gz',geoJson,{
+
+        })
         var myChart = echarts.init(document.getElementById('main'));
         option = {
+            title:{
+                    text:'我就想要买个房子而已而已'
+                },
+            tooltip:{
+                    trigger:'item',
+                    formatter:'{b}:{c}'
+                },
+            visualMap: {
+                min: 10,
+                max: 50,
+                text:['High','Low'],
+                realtime: false,
+                calculable: true,
+                inRange: {
+                    color: ['lightskyblue','yellow', 'orangered']
+                }
+            },
+
             series:[{
+
                 type:'map',
                 map:'gz',
+
+
+                data:[
+                    {name:'天河区',value:1111},
+                    {name:'番禺区',value:222}
+                ],
+                nameMap:[
+                    {'天河区':'tianhe'}
+                ]
             }]
         }
         myChart.setOption(option)

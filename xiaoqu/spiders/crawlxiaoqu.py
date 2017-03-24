@@ -3,6 +3,7 @@
 import scrapy
 from scrapy import Selector
 from xiaoqu.items import XiaoquItem
+from xiaoqu.items import BargainItem
 
 class crawlxiaoqu(scrapy.Spider):
 
@@ -27,6 +28,15 @@ class crawlxiaoqu(scrapy.Spider):
         #90天内成交额
         sellOut= sel.xpath('//div[@class="houseInfo"]/a/text()').extract()
 
+        #房名
+        houseName
+        #户型
+        houseType = response.selector.xpath("//div[@class='info']/div[@class='title']/a/text()").extract()
+        #成交价
+        dealPrice = response.selector.xpath("//div[@class='totalPrice']/span/text()").extract()
+
+
+        bargain = BargainItem()
         item = XiaoquItem()
         for i in range(29):
             item['xiaoqu'] = xiaoqu[i].strip()

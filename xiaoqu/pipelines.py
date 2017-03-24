@@ -10,6 +10,8 @@ import codecs
 import csv
 import sys
 import time
+import MySQLdb
+import MySQLdb.cursors
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -25,6 +27,20 @@ sys.setdefaultencoding('utf-8')
 
 filename = os.path.join('/Users/zidongceshi/code/xiaoqu/xiaoqu/analysis',time.strftime('%Y%m%d',time.localtime(time.time())))
 filename = filename + '.csv'
+config = {
+    'host':'localhost',
+    'port':3306,
+    'user':'root',
+    'passwd':'1234',
+    'db':'house',
+    'charset':"utf8", #不加这个,在mysql中会以乱码显示中文
+    'cursorclass':MySQLdb.cursors.DictCursor,
+}
+
+def connDB():
+    db = MySQLdb.connect(**config)
+    return db
+
 class XiaoQuWriteToCsv(object):
     def write_to_csv(self,item):
         csvwriter = csv.writer(codecs.open(filename,'a',encoding='utf-8'))
@@ -32,4 +48,17 @@ class XiaoQuWriteToCsv(object):
 
     def process_item(self,item,spider):
         self.write_to_csv(item)
+        return item
+
+class BargainWriteToDB(object):
+    def process_item(self,item,spider):
+        conn = connDB()
+        cursor = conn.cursor()
+        value = [item['houseName'],item['houseType'],item['houseSize'],item['dealPrice'],item['dealDate'],item['unitPrice'],item['direction'],item['elevator'],item['decoration'],item['floor'],item['buildDate'],item['originalPrice']]
+        try:
+            cursor.execute('INSERT INTO bargain (houseName,houseType,houseSize,dealPrice,dealDate,unitPrice,direction,elevator,decoration,floor,bulidDate,originalPrice) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',value)
+            conn.commit()
+        except Exception,e:
+            print e
+            conn.rollback()
         return item
