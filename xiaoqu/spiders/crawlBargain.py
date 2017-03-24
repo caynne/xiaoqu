@@ -8,7 +8,7 @@ from xiaoqu.items import BargainItem
 class crawlxiaoqu(scrapy.Spider):
 
     name = 'bargain'
-    start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg%d' % d for d in range(1,100,1)]
+    start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg%d' % d for d in range(1,16,1)]
     #start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg1']
 
     def parse(self, response):
@@ -30,7 +30,7 @@ class crawlxiaoqu(scrapy.Spider):
             except:
                 houseType.append('')
             try:
-                houseSize.append(temp[2])
+                houseSize.append(temp[2].strip('平米'))
             except:
                 houseSize.append('')
         #成交价
@@ -69,9 +69,13 @@ class crawlxiaoqu(scrapy.Spider):
             except:
                 floor.append('')
             try:
-                bulidDate.append(temp[1])
+                date = int(temp[1][0:4])
+                if date and isinstance(date,int):
+                    bulidDate.append(date)
+                else:
+                    bulidDate.append(0)
             except:
-                bulidDate.append('')
+                bulidDate.append(0)
 
 
         original = response.selector.xpath("//span[@class='dealCycleTxt']/span/text()").extract()
@@ -80,7 +84,9 @@ class crawlxiaoqu(scrapy.Spider):
         for i in range(0,len(original)):
             try:
                 if original[i].startswith('挂牌'):
-                    originalPrice.append(original[i])
+                    price = original[i]
+                    price = price.lstrip('挂牌').rstrip('万')
+                    originalPrice.append(int(price))
             except:
                 originalPrice.append('')
                 dealCycle.append('')
