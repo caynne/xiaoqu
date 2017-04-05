@@ -4,14 +4,70 @@ import scrapy
 from scrapy import Selector
 from xiaoqu.items import XiaoquItem
 from xiaoqu.items import BargainItem
+import json
 
 class crawlxiaoqu(scrapy.Spider):
 
     name = 'bargain'
-    start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg%d' % d for d in range(1,16,1)]
+    start_urls = ['http://gz.lianjia.com/chengjiao']
+    #start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg%d' % d for d in range(1,16,1)]
     #start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg1']
+    global cookies
+    cookies = {'lianjia_uuid':'0247fbb6-c2f0-46a9-82fd-eca66dd54407',
+            'miyue_hide':'%20index%20%20index%20%20index%20%20index%20%20index%20',
+            '_jzqx=1.1474370550.1477047517.2.jzqsr':'gz%2Elianjia%2Ecom|jzqct=/.jzqsr=gz%2Elianjia%2Ecom|jzqct=/chengjiao/',
+            '_qzja':'1.1491508772.1473303079895.1487578044787.1487585438292.1487585462512.1487585486125.0.0.0.72.14',
+            '_jzqa':'1.2845263418918121500.1473303080.1487578045.1487585438.14',
+            'UM_distinctid':'15ad6466b1230b-0d34d0806c368f-6a11157a-1fa400-15ad6466b15209',
+            'lianjia_token':'2.0078a267ff01959927690f4ece983d2511',
+            'Hm_lvt_678d9c31c57be1c528ad7f62e5123d56':'1490264834',
+            'select_city':'440100',
+            'all-lj':'1e9f8fe64a0d8d4cd8642eafcff9cfff',
+            '_smt_uid':'57d0d228.5047bf44',
+            'CNZZDATA1255849599':'1498381017-1473297753-%7C1491027071',
+            'CNZZDATA1254525948':'830432583-1473300258-%7C1491024920',
+            'CNZZDATA1255633284':'457444627-1473301265-%7C1491026849',
+            'CNZZDATA1255604082':'2037584611-1473298644-%7C1491027051',
+            '_gat':'1',
+            '_gat_global':'1',
+            '_ga':'GA1.2.862139384.1473303080',
+            '_gat_dianpu_agen':'1',
+            'lianjia_ssid':'7556199e-f2cd-e42e-1727-bd51e53858e6',
+        }
 
-    def parse(self, response):
+    def parse(self,response):
+        sel = Selector(response)
+        info = response.selector.xpath("//div[@data-role='ershoufang']/div/a/@href").extract()
+        position = []
+        for item in info:
+            position.append('http://gz.lianjia.com' + item)
+        for url in position:
+            yield scrapy.Request(url,callback=self.parse_position,cookies=cookies,meta={'area':item})
+
+    def parse_position(self,response):
+        area = response.meta.get('area')
+        sel = Selector(response)
+        info = response.selector.xpath("//div[@data-role='ershoufang']/div[2]/a/@href").extract()
+        position = []
+        for item in info:
+            position.append('http://gz.lianjia.com'+item)
+        for item in position:
+            yield scrapy.Request(item,callback=self.parse_totalPage,cookies=cookies,meta={'area':area})
+
+    def parse_totalPage(self,response):
+        area = response.meta.get('area')
+        page = response.selector.xpath("//div[@class='page-box house-lst-page-box']/@page-data").extract()
+        if page:
+            totalPage = json.loads(page[0])['totalPage']
+            urlList = [response._url+ 'pg%d' % d for d in range(1,totalPage+1,1)]
+
+            for url in urlList:
+                yield scrapy.Request(url,callback = self.parse_chenjiao,meta={'area':area})
+        else:
+            yield scrapy.Request(response._url,cookies = cookies,callback = self.parse_chenjiao,meta={'area':area})
+
+    def parse_chenjiao(self, response):
+        area = response.meta.get('area')
         sel = Selector(response)
         #房名
         #houseName
@@ -92,6 +148,9 @@ class crawlxiaoqu(scrapy.Spider):
                 dealCycle.append('')
 
         bargain = BargainItem()
+        title = response.selector.xpath("//title/text()").extract()
+        bargain['title'] = title[0][0:5]
+        bargain['area'] = area
         for i in range(len(info)):
             bargain['houseName'] = houseName[i]
             bargain['houseType'] = houseType[i]

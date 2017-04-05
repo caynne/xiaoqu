@@ -25,6 +25,7 @@ class XiaoquItem(scrapy.Item):
     sellOut = scrapy.Field()
 
 class BargainItem(scrapy.Item):
+    title = scrapy.Field()
     houseName = scrapy.Field()
     houseType = scrapy.Field()
     dealPrice = scrapy.Field()
@@ -38,3 +39,4 @@ class BargainItem(scrapy.Item):
     originalPrice = scrapy.Field()
     decoration = scrapy.Field()
     floor = scrapy.Field()
+    area = scrapy.Field()

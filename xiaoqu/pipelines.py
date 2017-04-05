@@ -54,9 +54,9 @@ class BargainWriteToDB(object):
     def process_item(self,item,spider):
         conn = connDB()
         cursor = conn.cursor()
-        value = [item['houseName'],item['houseType'],item['houseSize'],item['dealPrice'],item['dealDate'],item['unitPrice'],item['direction'],item['elevator'],item['decoration'],item['floor'],item['buildDate'],item['originalPrice']]
+        value = [item['area'],item['title'],item['houseName'],item['houseType'],item['houseSize'],item['dealPrice'],item['dealDate'],item['unitPrice'],item['direction'],item['elevator'],item['decoration'],item['floor'],item['buildDate'],item['originalPrice']]
         try:
-            cursor.execute('INSERT INTO bargain (houseName,houseType,houseSize,dealPrice,dealDate,unitPrice,direction,elevator,decoration,floor,bulidDate,originalPrice) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',value)
+            cursor.execute('INSERT INTO bargain (area,title,houseName,houseType,houseSize,dealPrice,dealDate,unitPrice,direction,elevator,decoration,floor,bulidDate,originalPrice) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',value)
             conn.commit()
         except Exception,e:
             print e
