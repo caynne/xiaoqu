@@ -10,8 +10,8 @@ import codecs
 import csv
 import sys
 import time
-import MySQLdb
-import MySQLdb.cursors
+#import MySQLdb
+#import MySQLdb.cursors
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -27,6 +27,7 @@ sys.setdefaultencoding('utf-8')
 
 filename = os.path.join('/Users/zidongceshi/code/xiaoqu/xiaoqu/analysis',time.strftime('%Y%m%d',time.localtime(time.time())))
 filename = filename + '.csv'
+'''
 config = {
     'host':'localhost',
     'port':3306,
@@ -37,9 +38,11 @@ config = {
     'cursorclass':MySQLdb.cursors.DictCursor,
 }
 
+
 def connDB():
     db = MySQLdb.connect(**config)
     return db
+'''
 
 class XiaoQuWriteToCsv(object):
     def write_to_csv(self,item):
@@ -50,6 +53,7 @@ class XiaoQuWriteToCsv(object):
         self.write_to_csv(item)
         return item
 
+'''
 class BargainWriteToDB(object):
     def process_item(self,item,spider):
         conn = connDB()
@@ -62,3 +66,4 @@ class BargainWriteToDB(object):
             print e
             conn.rollback()
         return item
+'''

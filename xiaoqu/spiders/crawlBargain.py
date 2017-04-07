@@ -9,7 +9,7 @@ import json
 class crawlxiaoqu(scrapy.Spider):
 
     name = 'bargain'
-    start_urls = ['http://gz.lianjia.com/chengjiao']
+    start_urls = ['http://gz.lianjia.com/chengjiao/huanan1']
     #start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg%d' % d for d in range(1,16,1)]
     #start_urls = ['http://gz.lianjia.com/chengjiao/huanan1/pg1']
     global cookies
@@ -38,6 +38,7 @@ class crawlxiaoqu(scrapy.Spider):
     def parse(self,response):
         sel = Selector(response)
         info = response.selector.xpath("//div[@data-role='ershoufang']/div/a/@href").extract()
+        asd = response.selector.xpath("//div[@class='crumbs fl']/a/text(").extract()
         position = []
         for item in info:
             position.append('http://gz.lianjia.com' + item)
