@@ -1,2 +1,2 @@
 # xiaoqu
-快速建议一个网络服务：python -m SimpleHTTPServer 4444
+从链接网站上爬去最近成效数据，并写入数据库
